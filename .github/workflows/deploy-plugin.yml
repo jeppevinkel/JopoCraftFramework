@@ -55,4 +55,3 @@ jobs:
           port: 2022
           localDir: plugin-output/
           remoteDir: ${{ secrets.FTP_PLUGIN_DIR }}
-          dryRun: true
