@@ -33,7 +33,7 @@ jobs:
         uses: actions/upload-artifact@v6
         with:
           name: plugin-dll
-          path: JopoCraftFramework/JopoCraftFramework.Plugin/bin/Release/JopoCraftFramework.Plugin.dll
+          path: JopoCraftFramework/JopoCraftFramework/JopoCraftFramework.Plugin/bin/Release/JopoCraftFramework.Plugin.dll
 
   deploy:
     runs-on: ubuntu-latest
