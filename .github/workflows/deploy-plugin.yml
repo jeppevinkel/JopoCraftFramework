@@ -52,11 +52,6 @@ jobs:
           name: plugin-dll
           path: plugin-output
 
-#      - name: Arrange dependencies folder
-#        run: |
-#          mkdir -p plugin-output/dependencies
-#          mv plugin-output/JopoCraftFramework.Contracts.dll plugin-output/dependencies/
-
       - name: Deploy DLL to game server via SFTP
         uses: wangyucode/sftp-upload-action@v3
         with:
