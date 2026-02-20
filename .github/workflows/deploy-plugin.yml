@@ -47,12 +47,12 @@ jobs:
           path: plugin-output
 
       - name: Deploy DLL to game server via SFTP
-        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        uses: wangyucode/sftp-upload-action@v3
         with:
-          server: euw1.ascendedonline.com
+          host: euw1.ascendedonline.com
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 2022
-          protocol: ftps
-          local-dir: plugin-output/
-          server-dir: ${{ secrets.FTP_PLUGIN_DIR }}
+          localDir: plugin-output/
+          remoteDir: ${{ secrets.FTP_PLUGIN_DIR }}
+          dryRun: true
