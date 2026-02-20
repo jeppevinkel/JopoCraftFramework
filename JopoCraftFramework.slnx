@@ -9,6 +9,6 @@
   <Project Path="JopoCraftFramework.Domain/JopoCraftFramework.Domain.csproj" />
   <Project Path="JopoCraftFramework.Infrastructure/JopoCraftFramework.Infrastructure.csproj" />
   <Project Path="JopoCraftFramework.Plugin/JopoCraftFramework.Plugin.csproj">
-    <Platform Solution="Debug|*" Project="x64" />
+    <Platform Project="x64" />
   </Project>
 </Solution>

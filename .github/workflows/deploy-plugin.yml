@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup NuGet
         uses: NuGet/setup-nuget@v2
@@ -29,13 +29,17 @@ jobs:
       - name: Build plugin in Release mode
         run: msbuild JopoCraftFramework.Plugin/JopoCraftFramework.Plugin.csproj /p:Configuration=Release /p:Platform=x64 /p:BuildProjectReferences=true
 
+      - name: Prepare artifact structure
+        run: |
+          New-Item -ItemType Directory -Force -Path artifact/dependencies
+          Copy-Item JopoCraftFramework.Plugin/bin/Release/JopoCraftFramework.Plugin.dll artifact/
+          Copy-Item JopoCraftFramework.Plugin/bin/Release/JopoCraftFramework.Contracts.dll artifact/dependencies/
+
       - name: Upload plugin artifact
         uses: actions/upload-artifact@v6
         with:
           name: plugin-dll
-          path: |
-            JopoCraftFramework.Plugin/bin/Release/JopoCraftFramework.Plugin.dll
-            JopoCraftFramework.Contracts/bin/Release/netstandard2.0/JopoCraftFramework.Contracts.dll
+          path: artifact/
 
   deploy:
     runs-on: ubuntu-latest
@@ -48,10 +52,10 @@ jobs:
           name: plugin-dll
           path: plugin-output
 
-      - name: Arrange dependencies folder
-        run: |
-          mkdir -p plugin-output/dependencies
-          mv plugin-output/JopoCraftFramework.Contracts.dll plugin-output/dependencies/
+#      - name: Arrange dependencies folder
+#        run: |
+#          mkdir -p plugin-output/dependencies
+#          mv plugin-output/JopoCraftFramework.Contracts.dll plugin-output/dependencies/
 
       - name: Deploy DLL to game server via SFTP
         uses: wangyucode/sftp-upload-action@v3
