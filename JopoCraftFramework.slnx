@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/RepositoryFiles/">
+    <File Path=".dockerignore" />
+    <File Path=".gitignore" />
+    <File Path="README.md" />
+  </Folder>
+  <Project Path="JopoCraftFramework.Api/JopoCraftFramework.Api.csproj" />
+  <Project Path="JopoCraftFramework.Contracts/JopoCraftFramework.Contracts.csproj" />
+  <Project Path="JopoCraftFramework.Domain/JopoCraftFramework.Domain.csproj" />
+  <Project Path="JopoCraftFramework.Infrastructure/JopoCraftFramework.Infrastructure.csproj" />
+  <Project Path="JopoCraftFramework.Plugin/JopoCraftFramework.Plugin.csproj" />
+</Solution>

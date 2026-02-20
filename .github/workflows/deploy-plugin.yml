@@ -1,0 +1,40 @@
+﻿name: Deploy Plugin
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - 'JopoCraftFramework.Plugin/**'
+      - 'JopoCraftFramework.Contracts/**'
+      - '.github/workflows/deploy-plugin.yml'
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v6
+
+      - name: Setup NuGet
+        uses: NuGet/setup-nuget@v2
+
+      - name: Restore NuGet packages
+        run: nuget restore JopoCraftFramework.slnx
+
+      - name: Setup MSBuild
+        uses: microsoft/setup-msbuild@v2
+
+      - name: Build plugin in Release mode
+        run: msbuild JopoCraftFramework.Plugin/JopoCraftFramework.Plugin.csproj /p:Configuration=Release
+
+      - name: Upload DLL to game server via FTP
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.6
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: JopoCraftFramework.Plugin/bin/Release/
+          server-dir: ${{ secrets.FTP_PLUGIN_DIR }}
+          dry-run: true
