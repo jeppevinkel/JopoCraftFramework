@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http;
+using System.Net.Http.Headers;
+using System.Text;
 using Exiled.API.Features;
 using Newtonsoft.Json;
 
@@ -12,15 +15,19 @@ namespace JopoCraftFramework.Plugin.Api
     public class HttpApiClient : IApiClient, IDisposable
     {
         private readonly Config _config;
-        private readonly WebClient _http;
+        private static readonly HttpClient HttpClient = new HttpClient
+        {
+            Timeout = TimeSpan.FromSeconds(30),
+        };
 
         public HttpApiClient(Config config)
         {
-            this._config = config;
-            _http = new WebClient();
-            _http.Headers[HttpRequestHeader.ContentType] = "application/json";
+            _config = config;
+            HttpClient.DefaultRequestHeaders.Add("User-Agent", "JopoCraftFramework/1.0");
+            HttpClient.DefaultRequestHeaders.Add("Accept", "application/json");
+            HttpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
             if (!string.IsNullOrEmpty(config.ApiKey))
-                _http.Headers["X-Api-Key"] = config.ApiKey;
+                HttpClient.DefaultRequestHeaders.Add("X-Api-Key", config.ApiKey);
         }
 
         /// <inheritdoc/>
@@ -31,8 +38,10 @@ namespace JopoCraftFramework.Plugin.Api
                 var json = JsonConvert.SerializeObject(dto);
                 if (_config.Debug)
                     Log.Debug($"[ApiClient] POST {json}");
-
-                _http.UploadStringAsync(new Uri(_config.EventEndpointUrl), "POST", json);
+                
+                var content = new StringContent(json, Encoding.UTF8, "application/json");
+                
+                HttpClient.PostAsync(_config.EventEndpointUrl, content);
             }
             catch (Exception ex)
             {
@@ -48,8 +57,8 @@ namespace JopoCraftFramework.Plugin.Api
                 var url = _config.EventEndpointUrl.TrimEnd('/') + "/" + relativeUrl.TrimStart('/');
                 if (_config.Debug)
                     Log.Debug($"[ApiClient] GET {url}");
-
-                return _http.DownloadString(url);
+                
+                return HttpClient.GetStringAsync(url).Result;
             }
             catch (Exception ex)
             {
@@ -60,7 +69,7 @@ namespace JopoCraftFramework.Plugin.Api
 
         public void Dispose()
         {
-            _http?.Dispose();
+            HttpClient.Dispose();
         }
     }
 }
