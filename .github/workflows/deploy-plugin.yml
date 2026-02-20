@@ -53,6 +53,6 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           port: 2022
-          protocol: sftp
+          protocol: ftps
           local-dir: plugin-output/
           server-dir: ${{ secrets.FTP_PLUGIN_DIR }}
