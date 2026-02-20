@@ -19,6 +19,8 @@ namespace JopoCraftFramework.Plugin.Api
             this._config = config;
             _http = new WebClient();
             _http.Headers[HttpRequestHeader.ContentType] = "application/json";
+            if (!string.IsNullOrEmpty(config.ApiKey))
+                _http.Headers["X-Api-Key"] = config.ApiKey;
         }
 
         /// <inheritdoc/>

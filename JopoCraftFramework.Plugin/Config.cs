@@ -13,5 +13,8 @@ namespace JopoCraftFramework.Plugin
 
         [Description("The endpoint URL to POST event DTOs to.")]
         public string EventEndpointUrl { get; set; } = "http://localhost:5000/api/events";
+
+        [Description("The API key sent in the X-Api-Key header for every request.")]
+        public string ApiKey { get; set; } = "";
     }
 }
