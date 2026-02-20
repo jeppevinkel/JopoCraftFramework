@@ -35,6 +35,8 @@ jobs:
           server: ${{ secrets.FTP_SERVER }}
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
+          port: 2022
+          protocol: ftps
           local-dir: JopoCraftFramework.Plugin/bin/Release/
           server-dir: ${{ secrets.FTP_PLUGIN_DIR }}
           dry-run: true
