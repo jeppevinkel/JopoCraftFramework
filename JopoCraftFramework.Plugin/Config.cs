@@ -6,7 +6,7 @@ namespace JopoCraftFramework.Plugin
     public class Config : IConfig
     {
         [Description("Whether the plugin is enabled.")]
-        public bool IsEnabled { get; set; } = true;
+        public bool IsEnabled { get; set; } = false;
 
         [Description("Whether debug logging is enabled.")]
         public bool Debug { get; set; } = false;
