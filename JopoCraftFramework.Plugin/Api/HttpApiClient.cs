@@ -11,14 +11,14 @@ namespace JopoCraftFramework.Plugin.Api
     /// </summary>
     public class HttpApiClient : IApiClient, IDisposable
     {
-        private readonly Config config;
-        private readonly WebClient http;
+        private readonly Config _config;
+        private readonly WebClient _http;
 
         public HttpApiClient(Config config)
         {
-            this.config = config;
-            http = new WebClient();
-            http.Headers[HttpRequestHeader.ContentType] = "application/json";
+            this._config = config;
+            _http = new WebClient();
+            _http.Headers[HttpRequestHeader.ContentType] = "application/json";
         }
 
         /// <inheritdoc/>
@@ -27,10 +27,10 @@ namespace JopoCraftFramework.Plugin.Api
             try
             {
                 var json = JsonConvert.SerializeObject(dto);
-                if (config.Debug)
+                if (_config.Debug)
                     Log.Debug($"[ApiClient] POST {json}");
 
-                http.UploadStringAsync(new Uri(config.EventEndpointUrl), "POST", json);
+                _http.UploadStringAsync(new Uri(_config.EventEndpointUrl), "POST", json);
             }
             catch (Exception ex)
             {
@@ -43,11 +43,11 @@ namespace JopoCraftFramework.Plugin.Api
         {
             try
             {
-                var url = config.EventEndpointUrl.TrimEnd('/') + "/" + relativeUrl.TrimStart('/');
-                if (config.Debug)
+                var url = _config.EventEndpointUrl.TrimEnd('/') + "/" + relativeUrl.TrimStart('/');
+                if (_config.Debug)
                     Log.Debug($"[ApiClient] GET {url}");
 
-                return http.DownloadString(url);
+                return _http.DownloadString(url);
             }
             catch (Exception ex)
             {
@@ -58,7 +58,7 @@ namespace JopoCraftFramework.Plugin.Api
 
         public void Dispose()
         {
-            http?.Dispose();
+            _http?.Dispose();
         }
     }
 }

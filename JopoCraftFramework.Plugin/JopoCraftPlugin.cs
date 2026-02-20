@@ -14,13 +14,13 @@ namespace JopoCraftFramework.Plugin
     /// </summary>
     public class JopoCraftPlugin : Plugin<Config>
     {
-        private IApiClient apiClient;
+        private IApiClient _apiClient;
 
-        private PlayerLifecycleEventHandlers    lifecycleHandlers;
-        private PlayerModerationEventHandlers   moderationHandlers;
-        private PlayerRoleEventHandlers         roleHandlers;
-        private PlayerCommunicationEventHandlers communicationHandlers;
-        private RoundEventHandlers              roundHandlers;
+        private PlayerLifecycleEventHandlers    _lifecycleHandlers;
+        private PlayerModerationEventHandlers   _moderationHandlers;
+        private PlayerRoleEventHandlers         _roleHandlers;
+        private PlayerCommunicationEventHandlers _communicationHandlers;
+        private RoundEventHandlers              _roundHandlers;
 
         public override string Name        => "JopoCraftFramework";
         public override string Author      => "JopoCraft";
@@ -33,13 +33,13 @@ namespace JopoCraftFramework.Plugin
         /// </summary>
         public override void OnEnabled()
         {
-            apiClient = new HttpApiClient(Config);
+            _apiClient = new HttpApiClient(Config);
 
-            lifecycleHandlers     = new PlayerLifecycleEventHandlers(apiClient);
-            moderationHandlers    = new PlayerModerationEventHandlers(apiClient);
-            roleHandlers          = new PlayerRoleEventHandlers(apiClient);
-            communicationHandlers = new PlayerCommunicationEventHandlers(apiClient);
-            roundHandlers         = new RoundEventHandlers(apiClient);
+            _lifecycleHandlers     = new PlayerLifecycleEventHandlers(_apiClient);
+            _moderationHandlers    = new PlayerModerationEventHandlers(_apiClient);
+            _roleHandlers          = new PlayerRoleEventHandlers(_apiClient);
+            _communicationHandlers = new PlayerCommunicationEventHandlers(_apiClient);
+            _roundHandlers         = new RoundEventHandlers(_apiClient);
 
             SubscribeEvents();
             base.OnEnabled();
@@ -54,13 +54,13 @@ namespace JopoCraftFramework.Plugin
         {
             UnsubscribeEvents();
 
-            (apiClient as IDisposable)?.Dispose();
-            apiClient             = null;
-            lifecycleHandlers     = null;
-            moderationHandlers    = null;
-            roleHandlers          = null;
-            communicationHandlers = null;
-            roundHandlers         = null;
+            (_apiClient as IDisposable)?.Dispose();
+            _apiClient             = null;
+            _lifecycleHandlers     = null;
+            _moderationHandlers    = null;
+            _roleHandlers          = null;
+            _communicationHandlers = null;
+            _roundHandlers         = null;
 
             base.OnDisabled();
             Log.Info($"{Name} disabled.");
@@ -69,64 +69,64 @@ namespace JopoCraftFramework.Plugin
         private void SubscribeEvents()
         {
             // Player lifecycle
-            PlayerEvents.Joined += lifecycleHandlers.OnJoined;
-            PlayerEvents.Left   += lifecycleHandlers.OnLeft;
-            PlayerEvents.Dying  += lifecycleHandlers.OnDying;
+            PlayerEvents.Joined += _lifecycleHandlers.OnJoined;
+            PlayerEvents.Left   += _lifecycleHandlers.OnLeft;
+            PlayerEvents.Dying  += _lifecycleHandlers.OnDying;
 
             // Moderation
-            PlayerEvents.Kicking          += moderationHandlers.OnKicking;
-            PlayerEvents.Kicked           += moderationHandlers.OnKicked;
-            PlayerEvents.Banning          += moderationHandlers.OnBanning;
-            PlayerEvents.Banned           += moderationHandlers.OnBanned;
-            PlayerEvents.IssuingMute      += moderationHandlers.OnIssuingMute;
-            PlayerEvents.RevokingMute     += moderationHandlers.OnRevokingMute;
-            PlayerEvents.Handcuffing      += moderationHandlers.OnHandcuffing;
-            PlayerEvents.RemovingHandcuffs += moderationHandlers.OnRemovingHandcuffs;
+            PlayerEvents.Kicking          += _moderationHandlers.OnKicking;
+            PlayerEvents.Kicked           += _moderationHandlers.OnKicked;
+            PlayerEvents.Banning          += _moderationHandlers.OnBanning;
+            PlayerEvents.Banned           += _moderationHandlers.OnBanned;
+            PlayerEvents.IssuingMute      += _moderationHandlers.OnIssuingMute;
+            PlayerEvents.RevokingMute     += _moderationHandlers.OnRevokingMute;
+            PlayerEvents.Handcuffing      += _moderationHandlers.OnHandcuffing;
+            PlayerEvents.RemovingHandcuffs += _moderationHandlers.OnRemovingHandcuffs;
 
             // Role / identity
-            PlayerEvents.ChangingRole      += roleHandlers.OnChangingRole;
-            PlayerEvents.Escaping          += roleHandlers.OnEscaping;
-            PlayerEvents.ChangingNickname  += roleHandlers.OnChangingNickname;
-            PlayerEvents.TogglingOverwatch += roleHandlers.OnTogglingOverwatch;
-            PlayerEvents.PreAuthenticating += roleHandlers.OnPreAuthenticating;
+            PlayerEvents.ChangingRole      += _roleHandlers.OnChangingRole;
+            PlayerEvents.Escaping          += _roleHandlers.OnEscaping;
+            PlayerEvents.ChangingNickname  += _roleHandlers.OnChangingNickname;
+            PlayerEvents.TogglingOverwatch += _roleHandlers.OnTogglingOverwatch;
+            PlayerEvents.PreAuthenticating += _roleHandlers.OnPreAuthenticating;
 
             // Communication
-            PlayerEvents.IntercomSpeaking        += communicationHandlers.OnIntercomSpeaking;
-            PlayerEvents.VoiceChatting           += communicationHandlers.OnVoiceChatting;
-            PlayerEvents.SendingAdminChatMessage += communicationHandlers.OnSendingAdminChatMessage;
+            PlayerEvents.IntercomSpeaking        += _communicationHandlers.OnIntercomSpeaking;
+            PlayerEvents.VoiceChatting           += _communicationHandlers.OnVoiceChatting;
+            PlayerEvents.SendingAdminChatMessage += _communicationHandlers.OnSendingAdminChatMessage;
 
             // Round
-            ServerEvents.RoundStarted += roundHandlers.OnRoundStarted;
-            ServerEvents.RoundEnded   += roundHandlers.OnRoundEnded;
+            ServerEvents.RoundStarted += _roundHandlers.OnRoundStarted;
+            ServerEvents.RoundEnded   += _roundHandlers.OnRoundEnded;
         }
 
         private void UnsubscribeEvents()
         {
-            PlayerEvents.Joined -= lifecycleHandlers.OnJoined;
-            PlayerEvents.Left   -= lifecycleHandlers.OnLeft;
-            PlayerEvents.Dying  -= lifecycleHandlers.OnDying;
+            PlayerEvents.Joined -= _lifecycleHandlers.OnJoined;
+            PlayerEvents.Left   -= _lifecycleHandlers.OnLeft;
+            PlayerEvents.Dying  -= _lifecycleHandlers.OnDying;
 
-            PlayerEvents.Kicking           -= moderationHandlers.OnKicking;
-            PlayerEvents.Kicked            -= moderationHandlers.OnKicked;
-            PlayerEvents.Banning           -= moderationHandlers.OnBanning;
-            PlayerEvents.Banned            -= moderationHandlers.OnBanned;
-            PlayerEvents.IssuingMute       -= moderationHandlers.OnIssuingMute;
-            PlayerEvents.RevokingMute      -= moderationHandlers.OnRevokingMute;
-            PlayerEvents.Handcuffing       -= moderationHandlers.OnHandcuffing;
-            PlayerEvents.RemovingHandcuffs -= moderationHandlers.OnRemovingHandcuffs;
+            PlayerEvents.Kicking           -= _moderationHandlers.OnKicking;
+            PlayerEvents.Kicked            -= _moderationHandlers.OnKicked;
+            PlayerEvents.Banning           -= _moderationHandlers.OnBanning;
+            PlayerEvents.Banned            -= _moderationHandlers.OnBanned;
+            PlayerEvents.IssuingMute       -= _moderationHandlers.OnIssuingMute;
+            PlayerEvents.RevokingMute      -= _moderationHandlers.OnRevokingMute;
+            PlayerEvents.Handcuffing       -= _moderationHandlers.OnHandcuffing;
+            PlayerEvents.RemovingHandcuffs -= _moderationHandlers.OnRemovingHandcuffs;
 
-            PlayerEvents.ChangingRole      -= roleHandlers.OnChangingRole;
-            PlayerEvents.Escaping          -= roleHandlers.OnEscaping;
-            PlayerEvents.ChangingNickname  -= roleHandlers.OnChangingNickname;
-            PlayerEvents.TogglingOverwatch -= roleHandlers.OnTogglingOverwatch;
-            PlayerEvents.PreAuthenticating -= roleHandlers.OnPreAuthenticating;
+            PlayerEvents.ChangingRole      -= _roleHandlers.OnChangingRole;
+            PlayerEvents.Escaping          -= _roleHandlers.OnEscaping;
+            PlayerEvents.ChangingNickname  -= _roleHandlers.OnChangingNickname;
+            PlayerEvents.TogglingOverwatch -= _roleHandlers.OnTogglingOverwatch;
+            PlayerEvents.PreAuthenticating -= _roleHandlers.OnPreAuthenticating;
 
-            PlayerEvents.IntercomSpeaking        -= communicationHandlers.OnIntercomSpeaking;
-            PlayerEvents.VoiceChatting           -= communicationHandlers.OnVoiceChatting;
-            PlayerEvents.SendingAdminChatMessage -= communicationHandlers.OnSendingAdminChatMessage;
+            PlayerEvents.IntercomSpeaking        -= _communicationHandlers.OnIntercomSpeaking;
+            PlayerEvents.VoiceChatting           -= _communicationHandlers.OnVoiceChatting;
+            PlayerEvents.SendingAdminChatMessage -= _communicationHandlers.OnSendingAdminChatMessage;
 
-            ServerEvents.RoundStarted -= roundHandlers.OnRoundStarted;
-            ServerEvents.RoundEnded   -= roundHandlers.OnRoundEnded;
+            ServerEvents.RoundStarted -= _roundHandlers.OnRoundStarted;
+            ServerEvents.RoundEnded   -= _roundHandlers.OnRoundEnded;
         }
     }
 }
