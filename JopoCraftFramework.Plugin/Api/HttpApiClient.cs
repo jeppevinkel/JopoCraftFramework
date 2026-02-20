@@ -1,25 +1,23 @@
 ﻿using System;
 using System.Net;
-using System.Web.Script.Serialization;
 using Exiled.API.Features;
+using Newtonsoft.Json;
 
 namespace JopoCraftFramework.Plugin.Api
 {
     /// <summary>
     /// HTTP implementation of <see cref="IApiClient"/> backed by
-    /// <see cref="WebClient"/> and <see cref="JavaScriptSerializer"/>.
+    /// <see cref="WebClient"/> and <see cref="JsonConvert"/>.
     /// </summary>
     public class HttpApiClient : IApiClient, IDisposable
     {
         private readonly Config config;
         private readonly WebClient http;
-        private readonly JavaScriptSerializer serializer;
 
         public HttpApiClient(Config config)
         {
             this.config = config;
-            serializer  = new JavaScriptSerializer();
-            http        = new WebClient();
+            http = new WebClient();
             http.Headers[HttpRequestHeader.ContentType] = "application/json";
         }
 
@@ -28,7 +26,7 @@ namespace JopoCraftFramework.Plugin.Api
         {
             try
             {
-                var json = serializer.Serialize(dto);
+                var json = JsonConvert.SerializeObject(dto);
                 if (config.Debug)
                     Log.Debug($"[ApiClient] POST {json}");
 
