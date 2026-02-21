@@ -44,7 +44,7 @@ namespace JopoCraftFramework.Plugin.Api
                 HttpResponseMessage response = HttpClient.PostAsync(_config.EventEndpointUrl, content).Result;
                 
                 if (_config.Debug)
-                    Log.Debug($"[ApiClient] POST {_config.EventEndpointUrl} response: {response.Content.ReadAsStringAsync().Result}");
+                    Log.Debug($"[ApiClient] POST {_config.EventEndpointUrl} response: {response.StatusCode} {response.Content.ReadAsStringAsync().Result}");
             }
             catch (Exception ex)
             {
