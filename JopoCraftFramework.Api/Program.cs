@@ -1,4 +1,5 @@
 ﻿using JopoCraftFramework.Api.Hubs;
+using JopoCraftFramework.Api.Json;
 using JopoCraftFramework.Api.Middleware;
 using JopoCraftFramework.Infrastructure;
 using JopoCraftFramework.Infrastructure.Persistence;
@@ -6,10 +7,13 @@ using Microsoft.EntityFrameworkCore;
 
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddControllers();
+builder.Services.AddControllers()
+    .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new BaseEventDtoConverter()));
 builder.Services.AddOpenApi();
 builder.Services.AddSignalR();
-builder.Services.AddInfrastructure(builder.Configuration.GetConnectionString("DefaultConnection")!);
+string connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+    ?? throw new InvalidOperationException("Connection string 'DefaultConnection' is not configured.");
+builder.Services.AddInfrastructure(connectionString);
 
 WebApplication app = builder.Build();
 
