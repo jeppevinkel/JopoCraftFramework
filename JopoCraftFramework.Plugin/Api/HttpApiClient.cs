@@ -41,7 +41,10 @@ namespace JopoCraftFramework.Plugin.Api
                 
                 var content = new StringContent(json, Encoding.UTF8, "application/json");
                 
-                HttpClient.PostAsync(_config.EventEndpointUrl, content);
+                HttpResponseMessage response = HttpClient.PostAsync(_config.EventEndpointUrl, content).Result;
+                
+                if (_config.Debug)
+                    Log.Debug($"[ApiClient] POST {_config.EventEndpointUrl} response: {response.Content.ReadAsStringAsync().Result}");
             }
             catch (Exception ex)
             {
@@ -58,7 +61,14 @@ namespace JopoCraftFramework.Plugin.Api
                 if (_config.Debug)
                     Log.Debug($"[ApiClient] GET {url}");
                 
-                return HttpClient.GetStringAsync(url).Result;
+                var response = HttpClient.GetStringAsync(url).Result;
+
+                if (_config.Debug)
+                {
+                    Log.Debug($"[ApiClient] GET {relativeUrl} response: {response}");
+                }
+                
+                return response;
             }
             catch (Exception ex)
             {
